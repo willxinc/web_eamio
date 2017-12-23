@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="HandheldFriendly" content="True">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta http-equiv="cleartype" content="on">
+		<title>web-eamio</title>
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine"><link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+		<style>
+			body { margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; color: #3498db; width: 320px; height: 450px; margin: auto; }
+			#container { width: 320px; height: 450px; position: relative; }
+			.numpad { margin: 0; padding: 0; position: absolute; bottom: 0; width: 100%; }
+			.numpad li { list-style: none; float: left; width: 33.33%; text-align: center; height: 65px; padding-top: 15px; -webkit-font-smoothing: antialiased; font-size: 32px; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+			.numpad li.player { color: red }
+			.numpad li:not(.spacer).active { background-color: darkgray; }
+			.scanner { image-rendering: pixelated; background-position: center; background-repeat: no-repeat; background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAD2UExURb9SAdpbAOt3HA0AAMRZAut0GOtxEwAAANpaAMVdBQAAAAAAAMdaCN53LJxNGvxtAV4lALhNAPxpAI86ANBWAAAAAO17I+l6KOVuE+1zF/56DfhoAP9rAP9qAP////9sAP9uAP9vAP9zAP9wAP9yAP90AP9xAP91Av/59f/79/91AP93Bv9tAP92D/95F/9zDf+RRP/9/P+eUv92GP93Cv9+Iv+4g//+/v/Rsf9vB/+DLP+fWP+yfP/BmP/28P+OPP/8+v+kZP9zBv/v5P+sc//cxP+JNP/q3f98GP9sBP/z6v/Fnf+VTP/l0/+ygP/k0f/IpP/HoW5+H+QAAAAcdFJOU2za2gNx2top2nELGWNeKvozi/1rwiPAjIO8/feTTApqAAACXklEQVRIx43U2XqiMACGYWaYrdp1cVYTNkWoWMQNQEXctTp15v5vppAAJBJ4+h/06HubSKUcz199/0jvc7Yv1H5d8TzH/xgMBu12u9VqPT01w8nhGtHUcEo4KZwYzhAE8SfPXf9GPQJNEqgMINxcc5dZnx4gkwekIOyF+iV3Qff5G9GA4y7yPfsjkKDFALkDjAy0yg6gboQAzok+/4yyjxCDpC87wMhAmqN+0Bv3iHXoG0UgzfETXUNqJ5d8Rgg0yV7uaDTQnqkbESD+vEVAOAfJ82EA8oAEyOnzLAACCWQ56xmAOiACWb9ZsMHuWGeARmOmzZnAmOrdpAcJiC6zhFNVRUB70dHPBMCliQHAAH0XGhN4WmwwGJlzG8JXz0Kg667hJD4gAjhvLLZ2b+zvMFCVA4STIQKePj/CE8A9AXa6Zm7hGIPnlfk3AWO4NXXNPQeqZy/7tr+Igb/x9BiYvt1f2n3ch+BT/F0eWi+mFgxjEGw7cwz6nqW5fmDiPgIqXse3hk56pQA6xgaDHjx4cAlyQHXgaOcoZgLgysBgPzWn8H/cE0CZWcFMwsBZham+erUjINS7VuCdAfQyHuBaxID8S4fgHxyBuI+AkmzhHBWJBYbTfdJTAL3weRD/ifMA/T8pACAPJKkEgDMgEXsHIHNRZAFQBNDL6NBgvQeADcR47qxLbOYCFhCJofc9eSPp68SAVRf2NMjl+Z4AWV2SJ8Ag6jRn9hEQqJXnEeCYv72oB5fc7U2+LszBn1uuendPxyU5uL+rcpXaw+MHYt9K9vhQrXB8pVr7+s7VqhX+DdFzIudKPhHhAAAAAElFTkSuQmCC); }
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<ul class="numpad">
+				<li class="key" rel="7">7</li>
+				<li class="key" rel="8">8</li>
+				<li class="key" rel="9">9</li>
+				<li class="key" rel="4">4</li>
+				<li class="key" rel="5">5</li>
+				<li class="key" rel="6">6</li>
+				<li class="key" rel="1">1</li>
+				<li class="key" rel="2">2</li>
+				<li class="key" rel="3">3</li>
+				<li class="key" rel="0">0</li>
+				<li class="key" rel="00">00</li>
+				<li class="key" rel=".">.</li>
+				<li class="settings" rel="settings">&#9881;</li>
+				<li class="scanner" rel="scan"></li>
+				<li class="player" rel="player">P1</li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+			var player = "0";
+			var ws;
+			window.onload=function(){
+				ws=new WebSocket("ws://" + window.location.host + "/reader");
+
+				ws.onmessage=function(evt){
+					console.log(evt.data);
+				};
+
+				ws.onopen=function(evt){
+					ws.send("connect");
+				}
+			}
+			window.onclose=function(){
+				ws.close();
+			}
+
+			var els = document.querySelectorAll("ul li");
+
+			els.forEach(function(el) {
+				var downHandle = function(event){
+					el.classList.add('active');
+					event.preventDefault();
+				};
+				var upHandle = function(event){
+					el.classList.remove('active');
+					event.preventDefault();
+				};
+				el.addEventListener("touchstart", downHandle, false);
+				el.addEventListener("touchend", upHandle, false);
+
+				el.addEventListener("mousedown", function(event){
+					downHandle(event);
+					event.stopPropagation();
+				}, false);
+				el.addEventListener("mouseup", function(event){
+					upHandle(event);
+					event.stopPropagation();
+				}, false);
+			});
+
+			var els = document.querySelectorAll("ul li.key");
+
+			els.forEach(function(el) {
+				var downHandle = function(event){
+					if (el.attributes.getNamedItem('rel')){
+						console.log(player + "start: " + el.attributes.getNamedItem('rel').value);
+						ws.send(player + "start: " + el.attributes.getNamedItem('rel').value);
+					}
+					event.preventDefault();
+				};
+				var upHandle = function(event){
+					if (el.attributes.getNamedItem('rel')){
+						console.log(player + "end: " + el.attributes.getNamedItem('rel').value);
+						ws.send(player + "end: " + el.attributes.getNamedItem('rel').value);
+					}
+					event.preventDefault();
+				};
+				el.addEventListener("touchstart", downHandle, false);
+				el.addEventListener("touchend", upHandle, false);
+
+				el.addEventListener("mousedown", function(event){
+					downHandle(event);
+					event.stopPropagation();
+				}, false);
+				el.addEventListener("mouseup", function(event){
+					upHandle(event);
+					event.stopPropagation();
+				}, false);
+			});
+
+			var set_el = document.querySelector(".settings");
+			set_el.addEventListener("touchend", function(){
+				location.href = "./settings";
+				event.preventDefault();
+			}, false);
+			set_el.addEventListener("mouseup", function(event){
+				location.href = "./settings";
+				event.preventDefault();
+				event.stopPropagation();
+			}, false);
+
+			var set_el = document.querySelector(".scanner");
+			set_el.addEventListener("touchend", function(){
+				var url = window.location.protocol + "//" + window.location.host + "/scanner/" + player + "/?ID={TAG-ID}&TYPE={TAG-TYPE}";
+				location.href = "nfc://scan/?callback=" + encodeURIComponent(url);
+				event.preventDefault();
+			}, false);
+
+			set_el.addEventListener("mouseup", function(event){
+				var url = window.location.protocol + "//" + window.location.host + "/scanner/" + player + "/?ID={TAG-ID}&TYPE={TAG-TYPE}";
+				location.href = "nfc://scan/?callback=" + encodeURIComponent(url);
+				event.preventDefault();
+				event.stopPropagation();
+			}, false);
+
+			var set_el = document.querySelector(".player");
+			var downHandle = function(event){
+				var els = document.querySelectorAll("ul li.key");
+
+				els.forEach(function(el) {
+					if (el.attributes.getNamedItem('rel') && el.classList.contains('active')){
+						el.classList.remove('active');
+						console.log(player + "end: " + el.attributes.getNamedItem('rel').value);
+						ws.send(player + "end: " + el.attributes.getNamedItem('rel').value);
+					}
+				});
+
+				if (player == "0"){
+					player = "1";
+					set_el.innerHTML = "P2";
+				}else if(player == "1"){
+					player = "0";
+					set_el.innerHTML = "P1";
+				}
+
+				event.preventDefault();
+			};
+
+			set_el.addEventListener("touchend", downHandle, false);
+
+			set_el.addEventListener("mouseup", function(event){
+				downHandle();
+				event.stopPropagation();
+			}, false);
+		</script>
+	</body>
+</html>
