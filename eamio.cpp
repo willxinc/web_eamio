@@ -255,14 +255,26 @@ uint8_t eam_io_read_card(uint8_t unit_no, uint8_t * card_id, uint8_t nbytes)
 		return EAM_IO_CARD_NONE;
 	}
 
-	memcpy(card_id, ID[unit_no], nbytes);
+	if (ID[unit_no][6] == 0x04 && ID[unit_no][7] == 0xe0)
+	{
+		for (size_t i = 0; i < 8; ++i)
+		{
+			card_id[i] = ID[unit_no][7 - i];
+		}
+	}
+	else
+	{
+		memcpy(card_id, ID[unit_no], nbytes);
+	}
 
 	info_ptr("web_eamio", "Actual lo: %x", *(uint32_t*)card_id);
 	info_ptr("web_eamio", "Actual hi: %x", *(uint32_t*)(card_id + 4));
 
 	if (card_id[0] == 0xe0 && card_id[1] == 0x04) {
+		info_ptr("web_eamio", "Found: EAM_IO_CARD_ISO15696");
 		return EAM_IO_CARD_ISO15696;
 	} else {
+		info_ptr("web_eamio", "Found: EAM_IO_CARD_FELICA");
 		return EAM_IO_CARD_FELICA;
 	}
 }
